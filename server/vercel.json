@@ -1,7 +1,7 @@
 {
    "version": 2,
-   "name": "Blog-website",
    "builds": [
+
       { "src": "server/server.js", "use": "@vercel/node" },
       { "src": "client/package.json", "use": "@vercel/static-build", "config": { "distDir": "client/build" } }
 
@@ -10,5 +10,5 @@
       { "src": "/api/(.*)", "dest": "/server/server.js" },
       { "src": "/(.*)", "dest": "/client/build/$1" }
 
-   ]
+   ] 
 }
