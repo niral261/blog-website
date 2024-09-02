@@ -1,0 +1,96 @@
+.hr-toolbar {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.hr-toolbar button, .hr-toolbar select, .hr-image-toolbar button {
+    padding: 5px;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.hr-toolbar select {
+    min-width: 120px;
+    font-size: 1rem;
+}
+
+.hr-toolbar button .fa, .hr-toolbar button .fas {
+    font-size: 1rem;
+}
+
+.hr-toolbar button:hover, .hr-image-toolbar button:hover {
+    background-color: #f0f0f0;
+}
+
+.hr-editor {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 200px;
+    overflow-y: auto;
+    border-radius: 5px;
+}
+
+.hr-editor .hr-editor-image, .hr-editor .hr-editor-video {
+    margin: 5px;
+    width: 50%;
+}
+
+.hr-image-toolbar {
+    display: none;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+.hr-image-toolbar button {
+    margin-right: 5px;
+}
+
+.hr-toolbar .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.hr-toolbar .dropdown .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    padding: 5px;
+    z-index: 1;
+    width: auto;
+    text-wrap: nowrap;
+}
+
+.hr-toolbar .dropdown .dropdown-content .content-inner {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-items: start;
+}
+
+.hr-toolbar .dropdown .dropdown-content .content-inner button {
+    text-align: left;
+}
+
+.hr-toolbar .dropdown .show {
+    display: block;
+}
+
+body.dark .hr-toolbar button, body.dark .hr-toolbar select {
+    color: #e0e6ed;
+}
+
+body.dark .hr-toolbar select {
+    background-color: #0e1726;
+}
+
+body.dark .hr-toolbar button:hover {
+    color: #0e1726;
+}

@@ -13,7 +13,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/', Router);
+app.use('/api', Router);
 
 app.use(express.static(path.join(__dirname, "./client/build")));
 

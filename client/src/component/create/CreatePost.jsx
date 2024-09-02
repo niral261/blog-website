@@ -1,32 +1,26 @@
 import { useState, useEffect, useContext } from 'react';
-import  { Box ,styled, FormControl, InputBase, Button, TextareaAutosize } from '@mui/material';
+import { Box, styled, FormControl, InputBase, Button } from '@mui/material';
 import { AddCircle as Add } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import  { DataContext } from '../../context/DataProvider';
+import { DataContext } from '../../context/DataProvider';
 import { API } from '../../service/api.js';
+import HREditor from '../../text-editor/editor.js';
+import '../../text-editor/editor.css';
 
 const StyledFormControl = styled(FormControl)`
     margin-top: 10px;
     display: flex;
     flex-direction: row;
 `;
+
 const InputTextField = styled(InputBase)`
     flex: 1;
     margin: 0 30px;
     font-size: 25px;
 `;
-const TextArea = styled(TextareaAutosize)`
-    width: 100%;
-    margin-top: 50px;
-    font-size: 18px;
-    border: none; 
-    &:focus-visible {
-        outline: none;
-    }
-`;
 
-const  Container = styled(Box)`
-    margin: 50px 100px   
+const Container = styled(Box)`
+    margin: 50px 100px;
 `;
 
 const Image = styled('img')({
@@ -42,12 +36,11 @@ const initialPost = {
     username: '',
     categories: '',
     createdDate: new Date()
-}
+};
 
 const CreatePost = () => {
-
-    const [ post, setPost ] = useState(initialPost);
-    const [ file, setFile ] = useState('');
+    const [post, setPost] = useState(initialPost);
+    const [file, setFile] = useState('');
     const { account } = useContext(DataContext);
     const location = useLocation();
     const navigate = useNavigate();
@@ -62,48 +55,74 @@ const CreatePost = () => {
                 data.append("file", file);
     
                 try {
-                    // API call
                     const response = await API.uploadFile(data);
-                    post.picture = response.data;
+                    setPost(prevPost => ({
+                        ...prevPost,
+                        picture: response.data
+                    }));
                 } catch (error) {
                     console.error("Error uploading file:", error);
-                    // Handle error if necessary
                 }
             }
-        }
+        };
         getImage();
-        post.categories = location.search?.split('=')[1] || 'All';
-        post.username = account.username;
-    }, [file]);
-
+        setPost(prevPost => ({
+            ...prevPost,
+            categories: location.search?.split('=')[1] || 'All',
+            username: account.username
+        }));
+    }, [file, location.search, account.username]);
 
     const savePost = async () => {
-        let response = await API.createPost(post);
+        const response = await API.createPost(post);
         if(response.isSuccess){
             navigate('/');
         }
     }
-    
 
     const handleChange = (e) => {
-        setPost({ ...post, [e.target.name]: e.target.value});
+        setPost({ ...post, [e.target.name]: e.target.value });
     }
-    
-    return(
+
+    useEffect(() => {
+        let editor;
+
+        const loadEditor = () => {
+            const container = document.getElementById('editor-container');
+            
+            editor = HREditor.init(container);
+            editor.onChange((html) => {
+                setPost(prevPost => ({
+                    ...prevPost,
+                    description: html
+                }));
+            });
+        };
+
+        loadEditor();
+
+        return () => {
+            if (editor && typeof editor.destroy === 'function') {
+                editor.destroy();
+            }
+        };
+    }, []);
+
+    return (
         <Container>
-            <Image src={url} alt="post"/>
+            <Image src={url} alt="post" />
             <StyledFormControl>
                 <label htmlFor="fileInput">
                     <Add fontSize="large" color="action" />
                 </label>
-                <input type="file" id="fileInput" style={{display: 'none'}} onChange={(e) => setFile(e.target.files[0])}/>
-                <InputTextField  placeholder='Title' onChange={(e) => handleChange(e)} name="title"/>
-                <Button onClick={() => savePost()} variant="contained" style={{backgroundColor:"#000", color:"#ffb21e"}}>Publish</Button>
+                <input type="file" id="fileInput" style={{ display: 'none' }} onChange={(e) => setFile(e.target.files[0])} />
+                <InputTextField placeholder='Title' onChange={(e) => handleChange(e)} name="title" />
+                <Button onClick={() => savePost()} variant="contained" style={{ backgroundColor: "#000", color: "#ffb21e" }}>Publish</Button>
             </StyledFormControl>
 
-            <TextArea minRows={5} placeholder='Tell your story...' onChange={(e) => handleChange(e)} name="description"/>
+            <div id="editor-container" style={{ marginTop: '50px', padding: '10px' ,minHeight: '200px', border: '1px solid #ccc' }} />
         </Container>
-    )
+    );
 }
 
 export default CreatePost;
