@@ -1,0 +1,33 @@
+services:
+  client:
+    build: client
+    ports:
+      - "3000:3000"
+    networks:
+      - blog
+  server:
+    build: server
+    ports:
+      - "8000:8000"
+    networks:
+      - blog
+    depends_on:
+      - mongo
+    env_file:
+      - /server/.env
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - blog
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  blog:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
