@@ -11,7 +11,10 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors(
+  {
+    origin: ["https://blog-website-omega-kohl.vercel.app/"]
+));
 app.use(express.json());
 app.use('/', Router);
 
