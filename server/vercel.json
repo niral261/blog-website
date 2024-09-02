@@ -1,8 +1,10 @@
 {
    "version": 2,
-   "name": "Blog-website",
    "builds": [
-      { "src": "*.js", "use": "@vercel/node" }
+      { 
+         "src": "*.js", 
+         "use": "@vercel/node"
+      }
    ],
    "routes": [
       { "src": "/(.*)", "dest": "/" }
